@@ -419,7 +419,7 @@ class Article < Content
   def merge_with(other_article_id)
     other_article = Article.find(other_article_id)
     self.body += other_article.body
-    if !self.extended.nil?
+    if !self.extended.nil? && !other_article.extended.nil?
      self.extended += other_article.extended
     end
     other_article.comments.each { |comment|  self.comments<<comment}
