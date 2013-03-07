@@ -36,6 +36,29 @@ class Admin::ContentController < Admin::BaseController
     end
     new_or_edit
   end
+  
+  def merge_form
+    @article = Article.find(params[:article_id])
+    if params[:merge_with].empty?
+      flash[:error] = _("Must specify article id to merge with")
+      redirect_to :action => 'index'
+      return
+    end
+    if params[:article_id] == params[:merge_with]
+      flash[:error] = _("Cannot merge article with self")
+      redirect_to :action => 'index'
+      return
+    end
+    other_article = Article.find(params[:merge_with])
+    if other_article.nil?
+      flash[:error] = _("Article was not found")
+      redirect_to :action => 'index'
+      return
+    end
+    @article.merge_with params[:merge_with]
+    redirect_to :action => 'index'
+    return
+  end
 
   def destroy
     @record = Article.find(params[:id])

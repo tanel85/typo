@@ -55,6 +55,42 @@ And /^I am logged into the admin panel$/ do
   end
 end
 
+And /^I am logged into the admin panel as regular user$/ do
+  User.create!({:login => 'regular',
+                :password => 'regular',
+                :email => 'regular@snow.com',
+                :profile_id => 2,
+                :name => 'regular',
+                :state => 'active'})
+  visit '/accounts/login'
+  fill_in 'user_login', :with => 'regular'
+  fill_in 'user_password', :with => 'regular'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end
+
+
+And /^I add an article$/ do
+  visit '/admin/content/new'
+  fill_in 'article_title', :with => 'cucumber test article'
+  fill_in 'article__body_and_extended_editor', :with => 'cucumber test article text'
+  click_button 'Publish'
+    if page.respond_to? :should
+    page.should have_content('Manage articles')
+  else
+    assert page.has_content?('Manage articles')
+  end
+end
+
+And /^I merge first article$/ do
+  fill_in 'merge_with', :with => '1'
+  click_button 'Merge'
+end
+
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }
